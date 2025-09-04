@@ -15,6 +15,11 @@ cards = driver.find_elements(By.CSS_SELECTOR, 'article[data-name="CardComponent"
 ads = []
 for card in cards:
         try:
+            link = card.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+        except:
+            link = None
+
+        try:
             price = card.find_element(By.CSS_SELECTOR, 'span[data-mark="MainPrice"]').text
         except:
             price = None
@@ -39,6 +44,7 @@ for card in cards:
 
 
         ads.append({
+            "links": link,
             "price": price,
             "address": address,
             "rooms": rooms
@@ -52,9 +58,9 @@ for ad in ads:
 # Открытие CSV файла для записи
 with open('prices.csv', mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
-    writer.writerow(['Price', 'Address', 'Rooms'])    # Записываем заголовок столбца
+    writer.writerow(['Links', 'Price', 'Address', 'Rooms'])    # Записываем заголовок столбца
 
     for ad in ads:  # Записываем цены в CSV файл
-        writer.writerow([ad['price'], ad['address'], ad['rooms']])
+        writer.writerow([ad['links'], ad['price'], ad['address'], ad['rooms']])
 
 driver.quit()
